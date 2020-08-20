@@ -15,7 +15,7 @@ namespace ui
     {
     public:
         TextImpl(const std::string &text, int posX, int posY, int fontSize) : text_(text), pos_x_(posX), pos_y_(posY),
-                                                                              font_("fonts/arial.ttf")
+                                                                              font_("arial.ttf")
         {
             font_.FaceSize(fontSize);
             layout_.SetFont(&font_);

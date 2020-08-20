@@ -2,7 +2,9 @@
 #include "button.h"
 #include "text.h"
 
+#include <sstream>
 #include <vector>
+#include <algorithm>
 
 namespace ui
 {
@@ -37,14 +39,21 @@ namespace ui
                 button.Render();
             }
 
-            Text headline(catalog_.at(current_index_).first, pos_x_, pos_y_ + button_height_ / 2 + 30, 24);
-            Text desc1(catalog_.at(current_index_).second, pos_x_, pos_y_ - button_height_ / 2 - 50, 18);
-            Text desc2(catalog_.at(current_index_).second, pos_x_, pos_y_ - button_height_ / 2 - 70, 18);
-            Text desc3(catalog_.at(current_index_).second, pos_x_, pos_y_ - button_height_ / 2 - 90, 18);
+            Text headline(catalog_.at(current_index_).first, pos_x_, pos_y_ + button_height_ / 2 + 30, 18);
             headline.Render();
-            desc1.Render();
-            desc2.Render();
-            desc3.Render();
+
+            std::stringstream in(catalog_.at(current_index_).second);
+            std::string line;
+            auto yOffset = 50;
+            for (auto i = 0; i < 3; ++i)
+            {
+                if (std::getline(in, line, '\n'))
+                {
+                    Text desc(line, pos_x_, pos_y_ - button_height_ / 2 - yOffset, 15);
+                    yOffset += 20;
+                    desc.Render();
+                }
+            }
         }
 
         void AddItem(const std::string &header, const std::string &description) override

@@ -18,8 +18,7 @@ namespace ui
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, texture_id_);
-
-            auto imgChannels = 0;
+            
             auto imgWidth = 0;
             auto imgHeight = 0;
             auto image = SOIL_load_image(file_name_.c_str(), &imgWidth, &imgHeight, 0, SOIL_LOAD_RGB);

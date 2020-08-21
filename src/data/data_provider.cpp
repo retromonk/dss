@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <sstream>
+#include <iostream>
 
 namespace data
 {
@@ -23,7 +24,7 @@ namespace data
             endpoint << "?hydrate=game(content(editorial(recap))),decisions";
             endpoint << "&date=" << inDate;
             endpoint << "&sportId=1";
-            httplib::Client client(hostname_);
+            httplib::Client client(hostname_.c_str());
             auto res = client.Get(endpoint.str().c_str());
             if (res != nullptr)
             {
@@ -100,11 +101,55 @@ namespace data
                                         }
                                     }
 
+                                    std::string img96x72;
+                                    std::string img148x112;
+                                    if (game.find("content") != game.end())
+                                    {
+                                        auto content = game["content"];
+                                        if (content.find("editorial") != content.end())
+                                        {
+                                            auto editorial = content["editorial"];
+                                            if (editorial.find("recap") != editorial.end())
+                                            {
+                                                auto recap = editorial["recap"];
+                                                if (recap.find("home") != recap.end())
+                                                {
+                                                    auto home = recap["home"];
+                                                    if (home.find("photo") != home.end())
+                                                    {
+                                                        auto photo = home["photo"];
+                                                        if (photo.find("cuts") != photo.end())
+                                                        {
+                                                            auto cuts = photo["cuts"];
+                                                            if (cuts.find("96x72") != cuts.end())
+                                                            {
+                                                                auto imgPath = cuts["96x72"];
+                                                                if (imgPath.find("src") != imgPath.end())
+                                                                {
+                                                                    img96x72 = imgPath["src"];
+                                                                }
+                                                            }
+
+                                                            if (cuts.find("148x112") != cuts.end()) 
+                                                            {
+                                                                                                                                auto imgPath = cuts["96x72"];
+                                                                if (imgPath.find("src") != imgPath.end())
+                                                                {
+                                                                    img148x112 = imgPath["src"];
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     auto headlineString = headline.str();
                                     headlineString.erase(std::remove(headlineString.begin(), headlineString.end(), '"'), headlineString.end());
                                     auto descriptionString = description.str();
                                     descriptionString.erase(std::remove(descriptionString.begin(), descriptionString.end(), '"'), descriptionString.end());
-                                    results.push_back({headlineString, descriptionString});
+                                    results.push_back({headlineString, descriptionString, img96x72, img148x112});
                                 }
                             }
                         }

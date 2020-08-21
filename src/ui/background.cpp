@@ -22,12 +22,15 @@ namespace ui
             auto imgChannels = 0;
             auto imgWidth = 0;
             auto imgHeight = 0;
-            auto image = SOIL_load_image(file_name_.c_str(), &imgWidth, &imgHeight, &imgChannels, SOIL_LOAD_RGBA);
+            auto image = SOIL_load_image(file_name_.c_str(), &imgWidth, &imgHeight, 0, SOIL_LOAD_RGB);
             if (image != nullptr)
             {
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imgWidth, imgHeight, imgChannels, GL_RGBA, GL_UNSIGNED_BYTE, image);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+                // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imgWidth, imgHeight, imgChannels, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
                 SOIL_free_image_data(image);
             }

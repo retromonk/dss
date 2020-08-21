@@ -11,16 +11,16 @@ namespace ui
     class DisplayImpl : public IDisplay
     {
     public:
-        DisplayImpl(const std::string &background, int width, int height) : 
-            background_(background, width, height),
-            selector_(width / 2, height / 2, 120, 70), 
-            width_(width), height_(height)
+        DisplayImpl(const std::string &background, int width, int height) : background_(background, width, height),
+                                                                            selector_(width / 2, height / 2, 120, 70),
+                                                                            width_(width), height_(height)
         {
         }
 
-        void AddContent(const std::string& headline, const std::string& description)
+        void AddContent(const std::string &headline, const std::string &description, 
+                        std::unique_ptr<data::IImageProvider> image1, std::unique_ptr<data::IImageProvider> image2)
         {
-            selector_.AddItem(headline, description);
+            selector_.AddItem(headline, description, std::move(image1), std::move(image2));
         }
 
         void Show() override
@@ -49,6 +49,7 @@ namespace ui
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
             background_.Init();
+            selector_.Init();
 
             glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
 
@@ -96,9 +97,10 @@ namespace ui
     {
     }
 
-    void Display::AddContent(const std::string& headline, const std::string& description)
+    void Display::AddContent(const std::string &header, const std::string &description,
+                             std::unique_ptr<data::IImageProvider> image1, std::unique_ptr<data::IImageProvider> image2)
     {
-        impl_->AddContent(headline, description);
+        impl_->AddContent(header, description, std::move(image1), std::move(image2));
     }
 
     void Display::Show()

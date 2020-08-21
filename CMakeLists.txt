@@ -15,12 +15,14 @@ conan_cmake_run(
    SETTINGS compiler.cppstd=17
    SETTINGS compiler.libcxx=libstdc++
    REQUIRES
-   cpp-httplib/0.6.6
+   cpp-httplib/0.7.0
    nlohmann_json/3.8.0
    glfw/3.3.2
    glm/0.9.9.8
    freetype/2.10.2
+   openssl/1.1.1d
    stb/20200203
+   libcurl/7.71.1
    BASIC_SETUP
    BUILD missing
 )

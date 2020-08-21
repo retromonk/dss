@@ -1,6 +1,7 @@
 #ifndef UI_SELECTOR_H
 #define UI_SELECTOR_H
 
+#include "../data/image_provider.h"
 #include "renderable.h"
 
 #include <memory>
@@ -11,7 +12,8 @@ namespace ui
     {
     public:
         virtual ~ISelector() = default;
-        virtual void AddItem(const std::string &header, const std::string &description) = 0;
+        virtual void AddItem(const std::string &header, const std::string &description,
+            std::unique_ptr<data::IImageProvider> small, std::unique_ptr<data::IImageProvider> large) = 0;
         virtual void Next() = 0;
         virtual void Previous() = 0;
     };
@@ -23,7 +25,8 @@ namespace ui
 
         void Init() override;
         void Render() override;
-        void AddItem(const std::string &header, const std::string &description) override;
+        void AddItem(const std::string &header, const std::string &description,
+            std::unique_ptr<data::IImageProvider> small, std::unique_ptr<data::IImageProvider> large) override;
         void Next() override;
         void Previous() override;
 

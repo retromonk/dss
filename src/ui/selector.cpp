@@ -8,7 +8,13 @@
 
 namespace ui
 {
-    using Data = std::pair<std::string, std::string>;
+    struct Data
+    {
+        std::string Header;
+        std::string Description;
+        std::unique_ptr<ui::Button> Button;
+    };
+
     class SelectorImpl : public ISelector
     {
     public:
@@ -18,6 +24,10 @@ namespace ui
 
         void Init() override
         {
+            for (const auto& entry : catalog_)
+            {
+                entry.Button->Init();
+            }
         }
 
         void Render() override
@@ -26,7 +36,7 @@ namespace ui
             {
                 return;
             }
-            
+
             const int margin = 60;
             auto startX = pos_x_ - current_index_ * (button_width_ + margin);
             for (auto i = 0UL; i < catalog_.size(); ++i)
@@ -35,14 +45,15 @@ namespace ui
                 auto posY = pos_y_;
                 auto width = i == current_index_ ? button_width_ * 1.5f : button_width_;
                 auto height = i == current_index_ ? button_height_ * 1.5f : button_height_;
-                Button button(width, height, posX, posY);
-                button.Render();
+                catalog_.at(i).Button->SetPosition(posX, posY);
+                catalog_.at(i).Button->SetSize(width, height);
+                catalog_.at(i).Button->Render();
             }
 
-            Text headline(catalog_.at(current_index_).first, pos_x_, pos_y_ + button_height_ / 2 + 30, 18);
+            Text headline(catalog_.at(current_index_).Header, pos_x_, pos_y_ + button_height_ / 2 + 30, 18);
             headline.Render();
 
-            std::stringstream in(catalog_.at(current_index_).second);
+            std::stringstream in(catalog_.at(current_index_).Description);
             std::string line;
             auto yOffset = 50;
             for (auto i = 0; i < 3; ++i)
@@ -56,9 +67,11 @@ namespace ui
             }
         }
 
-        void AddItem(const std::string &header, const std::string &description) override
+        void AddItem(const std::string &header, const std::string &description,
+                     std::unique_ptr<data::IImageProvider> small, std::unique_ptr<data::IImageProvider> large) override
         {
-            catalog_.push_back({header, description});
+            auto button = std::make_unique<Button>(std::move(large));
+            catalog_.push_back({header, description, std::move(button)});
         }
 
         void Next() override
@@ -100,9 +113,10 @@ namespace ui
         impl_->Render();
     }
 
-    void Selector::AddItem(const std::string &header, const std::string &description)
+    void Selector::AddItem(const std::string &header, const std::string &description,
+            std::unique_ptr<data::IImageProvider> small, std::unique_ptr<data::IImageProvider> large)
     {
-        impl_->AddItem(header, description);
+        impl_->AddItem(header, description, std::move(small), std::move(large));
     }
 
     void Selector::Next()

@@ -10,6 +10,8 @@ namespace data
     {
         std::string Headline;
         std::string Description;
+        std::string Image_96x72;
+        std::string Image_148x112;
     };
 
     class IDataProvider

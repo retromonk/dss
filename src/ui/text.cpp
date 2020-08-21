@@ -7,7 +7,6 @@
 #include <FTGL/ftgl.h>
 
 #include <map>
-#include <iostream>
 
 namespace ui
 {
